@@ -5,7 +5,7 @@ Using Bash scripts, this modular setup automates the creation of an EKS cluster 
 ## Prerequisites:  
 - Ubuntu/Debian-based system
 - AWS account with appropriate permissions
-- SSH key pair (for EC2 instances)
+- AWS SSH key pair 
 
 ## Setup Instructions:
 
