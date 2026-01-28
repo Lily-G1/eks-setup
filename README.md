@@ -9,7 +9,7 @@ Using Bash scripts, this modular setup automates the creation of an EKS cluster 
 
 ## Setup Instructions:
 
-1. Clone this repo for the scripts:
+1. Clone this repository:  
 ```
 git clone https://github.com/Lily-G1/eks-setup.git
 cd eks-setup
