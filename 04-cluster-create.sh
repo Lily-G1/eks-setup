@@ -57,8 +57,13 @@ case $METHOD in
         terraform plan -out=tfplan
         terraform apply tfplan
         
+        #-----------------------------------------1
+        # Before line 61, add:
+#        echo Creating .kube directory..."
+#        mkdir -p ~/.kube
+        #-----------------------------------------1
         # Extract kubeconfig from Terraform output
-        terraform output -raw kubeconfig > ~/.kube/config
+#        terraform output -raw kubeconfig > ~/.kube/config
         
         cd ..
         ;;
@@ -68,10 +73,19 @@ case $METHOD in
         ;;
 esac
 
+# Configure kubectl to access the EKS cluster
+echo "[INFO] Configuring kubectl to access EKS cluster..."
+aws eks update-kubeconfig \
+    --region $AWS_REGION \
+    --name $CLUSTER_NAME
+
+# Extract kubeconfig from Terraform output
+#terraform output -raw kubeconfig > ~/.kube/config
+
 # Verify cluster access
 echo "[INFO] Verifying cluster access..."
 kubectl cluster-info
 kubectl get nodes
 
-echo "SUCCESS! EKS cluster creation complete."
+echo "SUCCESS! EKS cluster & kubeconfig configuration complete."
 echo ""

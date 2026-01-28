@@ -96,15 +96,70 @@ resource "aws_eks_cluster" "devopsshack" {
   }
 }
 
+#--------------------------------------------------------------4
+# 1. ADD THIS OIDC PROVIDER BLOCK HERE (right after EKS cluster)
+data "tls_certificate" "cluster" {
+  url = aws_eks_cluster.devopsshack.identity[0].oidc[0].issuer
+}
+
+resource "aws_iam_openid_connect_provider" "cluster" {
+  client_id_list  = ["sts.amazonaws.com"]
+  thumbprint_list = [data.tls_certificate.cluster.certificates[0].sha1_fingerprint]
+  url             = aws_eks_cluster.devopsshack.identity[0].oidc[0].issuer
+}
+#---------------------------------------------------------------4
 
 resource "aws_eks_addon" "ebs_csi_driver" {
   cluster_name    = aws_eks_cluster.devopsshack.name
   addon_name      = "aws-ebs-csi-driver"
-  
+
+#------------------------------------------------1
+# Explicitly specify the IAM role ARN 
+  service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
+#--------------------------------------------------1  
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
+#--------------------------------------------------2
+  timeouts {
+    create = "30m"
+    update = "30m"
+    delete = "15m"
+  }
+# ------------------------------------------------2
 }
 
+
+# ------------------------------------------------3
+# Create IAM role for EBS CSI Driver
+resource "aws_iam_role" "ebs_csi_driver" {
+  name = "${var.cluster_name}-ebs-csi-driver-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Effect = "Allow"
+        Principal = {
+          Federated = aws_iam_openid_connect_provider.cluster.arn
+        }
+        Condition = {
+          StringEquals = {
+            "${replace(aws_iam_openid_connect_provider.cluster.url, "https://", "")}:sub" : "system:serviceaccount:kube-system:ebs-csi-controller-sa"
+          }
+        }
+      }
+    ]
+  })
+}
+
+# Attach the AWS managed policy
+resource "aws_iam_role_policy_attachment" "ebs_csi_driver" {
+  role       = aws_iam_role.ebs_csi_driver.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
+}
+
+# ----------------------------------------------------3
 
 resource "aws_eks_node_group" "devopsshack" {
   cluster_name    = aws_eks_cluster.devopsshack.name

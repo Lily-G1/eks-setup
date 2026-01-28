@@ -54,7 +54,7 @@ if ! command_exists kubectl; then
 else
     echo "[INFO] kubectl is already installed"
 fi
-kubectl version --client --short
+kubectl version --client
 
 
 # Install eksctl

@@ -3,3 +3,9 @@ variable "ssh_key_name" {
   type        = string
   default     = "ann-web-server"
 }
+
+variable "cluster_name" {
+  description = "The name of eks cluster"
+  type        = string
+  default     = "devopsshack-cluster"
+}
