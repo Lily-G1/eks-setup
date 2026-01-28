@@ -9,8 +9,8 @@ Using Bash scripting, this modular setup automates the creation of an EKS cluste
 
 ## Setup Instructions:
 
-### 1. Clone the scripts:
-git clone ...
+### 1. Clone this repo for the scripts:
+git clone https://github.com/Lily-G1/eks-setup.git
 cd eks-setup
 
 ??mkdir eks-setup && cd eks-setup
