@@ -12,7 +12,7 @@ Using Bash scripts, this modular setup automates the creation of an EKS cluster 
 1. Clone this repository:  
 ```
 git clone https://github.com/Lily-G1/eks-setup.git
-cd eks-setup
+cd eks-setup/
 ```  
 
 2. Edit configuration file with your values:  
@@ -51,5 +51,5 @@ chmod +x *.sh
 eksctl delete cluster --region "your AWS region" --name "your cluster name"  
 
 # If created with Terraform:  
-cd terraform && terraform destroy  
+cd eks-terraform && terraform destroy  
 ```
