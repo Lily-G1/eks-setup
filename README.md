@@ -1,6 +1,6 @@
 # EKS Cluster Setup Scripts
 
-Using Bash scripts, this modular setup automates the creation of an EKS cluster and essential add-ons.  
+Using Bash scripts, this setup automates the creation of an EKS cluster and essential add-ons.  
 
 ## Prerequisites:  
 - Ubuntu/Debian-based system
@@ -18,7 +18,9 @@ cd eks-setup/
 2. Edit configuration file with your values:  
 ```
 nano config.env
-```  
+```
+
+3. Edit terraform variable file (eks-terraform/variable.tf) with your values  
 
 4. Make all scripts executable:  
 ```
