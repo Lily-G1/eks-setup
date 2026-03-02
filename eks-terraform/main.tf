@@ -96,8 +96,8 @@ resource "aws_eks_cluster" "devopsshack" {
   }
 }
 
-#--------------------------------------------------------------4
-# 1. ADD THIS OIDC PROVIDER BLOCK HERE (right after EKS cluster)
+# --------------------------------------------------------------
+# ADD OIDC PROVIDER
 data "tls_certificate" "cluster" {
   url = aws_eks_cluster.devopsshack.identity[0].oidc[0].issuer
 }
@@ -107,29 +107,27 @@ resource "aws_iam_openid_connect_provider" "cluster" {
   thumbprint_list = [data.tls_certificate.cluster.certificates[0].sha1_fingerprint]
   url             = aws_eks_cluster.devopsshack.identity[0].oidc[0].issuer
 }
-#---------------------------------------------------------------4
+#---------------------------------------------------------------
 
 resource "aws_eks_addon" "ebs_csi_driver" {
   cluster_name    = aws_eks_cluster.devopsshack.name
   addon_name      = "aws-ebs-csi-driver"
 
-#------------------------------------------------1
-# Explicitly specify the IAM role ARN 
+#----------------------------------------------------------------
+# Explicitly specify IAM role ARN 
   service_account_role_arn = aws_iam_role.ebs_csi_driver.arn
-#--------------------------------------------------1  
+#----------------------------------------------------------------
   resolve_conflicts_on_create = "OVERWRITE"
   resolve_conflicts_on_update = "OVERWRITE"
-#--------------------------------------------------2
+#----------------------------------------------------------------
   timeouts {
     create = "30m"
     update = "30m"
     delete = "15m"
   }
-# ------------------------------------------------2
 }
 
-
-# ------------------------------------------------3
+# -----------------------------------------------------------------
 # Create IAM role for EBS CSI Driver
 resource "aws_iam_role" "ebs_csi_driver" {
   name = "${var.cluster_name}-ebs-csi-driver-role"
@@ -153,13 +151,13 @@ resource "aws_iam_role" "ebs_csi_driver" {
   })
 }
 
-# Attach the AWS managed policy
+# Attach AWS managed policy
 resource "aws_iam_role_policy_attachment" "ebs_csi_driver" {
   role       = aws_iam_role.ebs_csi_driver.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
 }
 
-# ----------------------------------------------------3
+# -------------------------------------------------------------------------
 
 resource "aws_eks_node_group" "devopsshack" {
   cluster_name    = aws_eks_cluster.devopsshack.name
@@ -168,12 +166,12 @@ resource "aws_eks_node_group" "devopsshack" {
   subnet_ids      = aws_subnet.devopsshack_subnet[*].id
 
   scaling_config {
-    desired_size = 3
+    desired_size = 2
     max_size     = 3
-    min_size     = 3
+    min_size     = 2
   }
 
-  instance_types = ["t2.medium"]
+  instance_types = ["t3.micro"] #change instance/nodes type as required
 
   remote_access {
     ec2_ssh_key = var.ssh_key_name
