@@ -166,12 +166,12 @@ resource "aws_eks_node_group" "devopsshack" {
   subnet_ids      = aws_subnet.devopsshack_subnet[*].id
 
   scaling_config {
-    desired_size = 2
+    desired_size = 3
     max_size     = 3
     min_size     = 2
   }
 
-  instance_types = ["t3.micro"] #change instance/nodes type as required
+  instance_types = ["t3.small"] #change instance/nodes type as required
 
   remote_access {
     ec2_ssh_key = var.ssh_key_name
