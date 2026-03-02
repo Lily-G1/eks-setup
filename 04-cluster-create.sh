@@ -58,7 +58,6 @@ case $METHOD in
         terraform apply tfplan
         
         #-----------------------------------------1
-        # Before line 61, add:
 #        echo Creating .kube directory..."
 #        mkdir -p ~/.kube
         #-----------------------------------------1
