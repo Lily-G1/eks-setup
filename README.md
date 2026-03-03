@@ -20,7 +20,10 @@ cd eks-setup/
 nano config.env
 ```
 
-3. Edit terraform variable file (eks-terraform/variable.tf) with your values  
+3. Edit terraform terraform variable file with your values:  
+```
+nano eks-terraform/variable.tf
+```
 
 4. Make all scripts executable:  
 ```
@@ -47,7 +50,7 @@ chmod +x *.sh
 # Verify installation  
 ./06-verification.sh  
 ```
-5. Cleanup - Delete all provisioned resources with either of the following:
+6. Cleanup - Delete all provisioned resources with either of the following:
 ```  
 # If created with eksctl:  
 eksctl delete cluster --region "your AWS region" --name "your cluster name"  
