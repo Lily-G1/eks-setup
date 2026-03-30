@@ -7,5 +7,5 @@ variable "ssh_key_name" {
 variable "cluster_name" {
   description = "The name of eks cluster"
   type        = string
-  default     = "devopsshack-cluster"
+  default     = "{name of cluster here}"
 }
