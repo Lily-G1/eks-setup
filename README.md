@@ -1,6 +1,6 @@
 # EKS Cluster Setup Scripts
 
-Using Bash scripts, this setup automates the creation of an EKS cluster and essential add-ons.  
+Using Bash scripts, this setup automates the creation of an EKS cluster with essential add-ons.  
 
 ## Prerequisites:  
 - Ubuntu/Debian-based system
